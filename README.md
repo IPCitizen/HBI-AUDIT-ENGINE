@@ -3,19 +3,24 @@ THE HYBRID BACKSLIDING INDEX (HBI)
 An Open-Science Quantitative Platform for Institutional Auditing, Constitutional Law, and Democratic Resilience
 ========================================================================================
 HOST ORGANIZATION: Citizens Liberty Alliance
+
 COMMUNICATION DESK: Citizenslibertyalliance@gmail.com
 ACADEMIC CATALOG: POLI 485 / LAW 720: Democratic Backsliding & Institutional Auditing
+
 DOCUMENT TYPE: Complete Curriculum, Independent Investigator Guide & Codebase
 OPERATIONAL STATUS: Production-Ready / Level 3 Primary Data Standards
+
 TABLE OF CONTENTS
 PART I: EXECUTIVE DOSSIER & QUICK-START GUIDE
  1.1 Executive Summary & Core Mission
  1.2 How to Use This Repository (Academic vs. Independent Investigator)
  1.3 Operational Security (OpSec) & Digital Footprint Protection Protocol
+
 PART II: ACADEMIC CURRICULUM & LAB INFRASTRUCTURE
  2.1 Course Syllabus & 15-Week Lecture Schedule
  2.2 Standardized 100-Point Evaluation Rubric
  2.3 Non-Partisan Institutional Oversight Memorandum Template
+
 PART III: MASTER AUDIT MODULES (DIMENSIONS 1 THROUGH 5)
 (Each module contains both Academic Theory and an Independent Investigator Quick-Start Guide)
  3.1 Module 1: Executive Aggrandizement, Emergency Power, & Salami-Slicing
@@ -23,6 +28,7 @@ PART III: MASTER AUDIT MODULES (DIMENSIONS 1 THROUGH 5)
  3.3 Module 3: Franchise Degradation & Electoral Asymmetry
  3.4 Module 4: Public Sphere Suppression & Information Atomization
  3.5 Module 5: Judicial Independence & Rule-of-Law Decay
+
 PART IV: STATUTORY INDEX & DATA ENDPOINTS
  4.1 Constitutional & Statutory Authority Index
  4.2 Primary Government Data Sources & Federal API Endpoints
@@ -343,6 +349,48 @@ To calculate the Injunction Compliance & Defiance Index (\bm{J_{ci}}):
 Scoring Matrix (Max 20 Points):
  Defiance Ratio (\bm{J_{ci}}): < 5.0% = 0–2 pts | 5.0%–20.0% = 3–5 pts | > 20.0% = 6–10 pts
  Forum Shopping Ratio (\bm{F_{sc}}): < 15.0% = 0–2 pts | 15.0%–50.0% = 3–5 pts | > 50.0% = 6–10 pts
+
+ PART IV: STATUTORY INDEX & DATA ENDPOINTS
+To assist the Independent Investigator in verifying all metrics, below is the required directory of public ledgers and federal endpoints used by the HBI platform.
+
+4.1 Constitutional & Statutory Authority Index
+
+ Appropriations Clause (U.S. Const. art. I, § 9, cl. 7): Power of the Purse.
+ 
+ Elections Clause (U.S. Const. art. I, § 4, cl. 1): State Times/Places/Manner.
+
+ Administrative Procedure Act (5 U.S.C. § 553): Notice & Comment rulemaking.
+
+ Civil Service Protections (5 U.S.C. § 2302): Prohibited Personnel Practices.
+
+ The National Emergencies Act (50 U.S.C. §§ 1601–1651): Emergency declarations.
+ 
+ The National Voter Registration Act (52 U.S.C. §§ 20501–20511): Voter purge restrictions.
+
+4.2 Primary Government Data Sources
+
+1. The Federal Register (Direct Gateway)
+ URL: ⁠[https://www.federalregister.gov/](https://www.federalregister.gov/)⁠
+ Target Use: Executive Orders, Proclamations, Schedule F reclassifications, Inspector General removals, and Emergency regulatory bypasses.
+
+2. USAspending.gov (Treasury Account Symbol Gateway)
+ URL: ⁠[https://www.usaspending.gov/](https://www.usaspending.gov/)⁠
+ Target Use: Agency budget balances, unilateral diversions (\bm{R_{bd}}), Salami-Slicing metrics (\bm{V_{cs}}), and federal advertising procurement contracts (\bm{S_{ad}}).
+
+3. U.S. Census Bureau TIGER/Line GIS Geodatabases
+ URL: ⁠[https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html)⁠
+ Target Use: Downloading shapefiles to map congressional districts and calculate the Partisan Efficiency Gap (\bm{EG}).
+
+4. PACER (Public Access to Court Electronic Records)
+ URL: ⁠[https://pacer.uscourts.gov](https://pacer.uscourts.gov)⁠ (Or use the free RECAP extension: ⁠[https://free.law/recap](https://free.law/recap)⁠)
+ Target Use: Checking federal district civil dockets for preliminary injunction defiance (\bm{J_{ci}}) and single-judge forum shopping capture (\bm{F_{sc}}).
+
+5. OPM FedScope (Federal Human Resources Data)
+ URL: ⁠[https://www.fedscope.opm.gov/](https://www.fedscope.opm.gov/)⁠
+ Target Use: Cross-referencing Civil Service separation and attrition counts to verify politicization and purges (\bm{P_{cs}}).
+
+
+
 
  
 
