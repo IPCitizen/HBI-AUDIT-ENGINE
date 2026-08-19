@@ -152,7 +152,7 @@ To ensure high-quality, objective data, all student or researcher audits should 
 Once an audit is complete, the findings must be formatted into this standardized memorandum for delivery.
 
 ========================================================================================
-                      NON-PARTISAN INSTITUTIONAL OVERSIGHT MEMORANDUM
+                      NON-PARTISAN    INSTITUTIONAL OVERSIGHT MEMORANDUM
 ========================================================================================
 TO:         [Target Oversight Body: GAO / OIG / OSC / MSPB / Congressional Committee]
 FROM:       Citizens Liberty Alliance Policy Clinic / Audit Lab
@@ -181,4 +181,173 @@ COMPOSITE HBI SCORES:
 5. RECOMMENDED STATUTORY REMEDIES & OVERSIGHT ACTION
    [Outline specific recommendations: GAO Decisions, IG audits, or OSC investigations.]
 ========================================================================================
+
+PART III: MASTER AUDIT MODULES (DIMENSIONS 1 THROUGH 5)
+========================================================================================
+3.1 MODULE 1: Executive Aggrandizement, Emergency Power, & Salami-Slicing (\bm{D_1})
+========================================================================================
+
+Section 1: Theoretical & Legal Foundations
+Executive Aggrandizement occurs when the executive branch expands its authority by bypassing legislative appropriations or misusing statutory emergency authorities. Institutional erosion rarely happens all at once; it happens through "Salami-Slicing"—systematic, sub-threshold budget transfers that avoid single-event reporting triggers but cumulatively achieve massive overreach.
+
+Core Legal Pillars:
+
+ The Appropriations Clause (U.S. Const. art. I, § 9, cl. 7): Congress controls the purse.
+ 
+ The National Emergencies Act (50 U.S.C. §§ 1601–1651): Regulates emergency declarations.
+
+ The Antideficiency Act (31 U.S.C. §§ 1341, 1517): Prohibits unappropriated expenditures.
+
+Section 2: Independent Investigator Quick-Start
+You don't need a lab to track this. If you suspect an executive agency is unilaterally diverting funds to projects Congress refused to pay for, here is how you check:
+
+1. Go to USAspending.gov and search the target agency's Treasury Account Symbol (TAS). Note their total "Budgetary Resources."
+
+2. Run the D1 Python Script: ⁠python d1_audit_tool.py --days 365 --aid [Agency ID]⁠
+
+3. The tool will automatically scan the Federal Register for emergency declarations and tally up the "Cumulative Velocity" (\bm{V_{cs}}) of sub-threshold transfers.
+
+Section 3: Quantitative Metric Methodology & Scoring
+
+To calculate the Unilateral Budget Diversion Ratio (\bm{R_{bd}}):
+<img width="1813" height="211" alt="image" src="https://github.com/user-attachments/assets/6efeddec-528c-4bb8-a710-9e19d062811d" />
+
+Scoring Matrix (Max 20 Points):
+ \bm{R_{bd}} Score: < 1.0% = 0–2 pts | 1.0%–5.0% = 3–5 pts | > 5.0% = 6–10 pts
+ \bm{V_{cs}} Salami-Slicing Penalty: If the tool detects > 3 sub-threshold transfers or a cumulative volume > $10M, add +3 Penalty Points. If > 7 transfers, add +5 Penalty Points.
+========================================================================================
+3.2 MODULE 2: Law Enforcement & Regulatory Asymmetry (\bm{D_2})
+========================================================================================
+
+Section 1: Theoretical & Legal Foundations
+Law Enforcement Asymmetry occurs when executive and regulatory mechanisms are selectively deployed against political critics, while loyalists are insulated. This requires the executive to first dismantle the neutral civil service by firing independent Inspectors General (IGs) or reclassifying career civil servants into "at-will" political appointees (e.g., Schedule F).
+
+Core Legal Pillars:
+ 
+ Merit Systems Protection (5 U.S.C. § 2302): Protects civil servants from political coercion.
+ 
+ Inspector General Act of 1978: Establishes independent OIGs to investigate misconduct.
+
+ Whistleblower Protection Act of 1989: Shields employees exposing waste or illegal actions.
+
+Section 2: Independent Investigator Quick-Start
+If you suspect an administration is purging the civil service to install loyalists:
+
+1. Run the D2 Python Script: ⁠python d2_audit_tool.py --days 365⁠
+
+2. The script will scan the Federal Register API specifically looking for "Schedule F" or "Excepted Service" reclassifications, as well as formal notices of Inspector General removals.
+
+3. Cross-reference any major personnel shifts with OPM FedScope data (publicly available) to see if career separations abnormally spike.
+
+Section 3: Quantitative Metric Methodology & Scoring
+To calculate the Civil Service Politicization Index (\bm{P_{cs}}):
+
+<img width="2294" height="206" alt="image" src="https://github.com/user-attachments/assets/84e5d02e-d336-41c6-b797-2f6845bc5f94" />
+
+Scoring Matrix (Max 20 Points):
+ \bm{P_{cs}} Score: < 2.0% = 0–2 pts | 2.0%–10.0% = 3–5 pts | > 10.0% = 6–10 pts
+ Regulatory Asymmetry (\bm{A_{re}}): Target audit rates exceeding the 10-year baseline by > 50% = 6–10 pts.
+
+ ========================================================================================
+3.3 MODULE 3: Franchise Degradation & Electoral Asymmetry (\bm{D_3})
+========================================================================================
+
+Section 1: Theoretical & Legal Foundations
+Franchise Degradation occurs when voting procedures, district maps, and administrative registration rules are altered to decouple popular majorities from legislative seat outcomes. This is mathematically quantifiable through gerrymandering (packing and cracking) and anomalous voter roll purges.
+
+Core Legal Pillars:
+
+ The Elections Clause (U.S. Const. art. I, § 4, cl. 1): Grants states primary authority over elections, reserving override power to Congress.
+ 
+ The Voting Rights Act of 1965: Prohibits voting practices that result in discrimination.
+ 
+ National Voter Registration Act (NVRA) of 1993: Prohibits systematic voter roll purges within 90 days of a federal election.
+
+Section 2: Independent Investigator Quick-Start
+Want to test if your state's district maps are mathematically rigged to waste your vote?
+
+1. Download precinct-level election returns from your Secretary of State's website.
+
+2. Run the D3 Python Script: ⁠python d3_audit_tool.py --election_data [your_file.csv]⁠
+
+3. The tool calculates the "Partisan Efficiency Gap" (\bm{EG}). If one party is wasting significantly fewer votes than the other to win seats, the map is gerrymandered.
+
+4. You can also check if your state executed a mass voter roll cancellation within the NVRA 90-Day "Quiet Period" before an election, which triggers an automatic penalty multiplier.
+
+Section 3: Quantitative Metric Methodology & Scoring
+To calculate the Partisan Efficiency Gap (\bm{EG}):
+
+<img width="2447" height="206" alt="image" src="https://github.com/user-attachments/assets/575a148e-5c0b-44e1-b0a5-546b00a06fcc" />
+
+Scoring Matrix (Max 20 Points):
+ \bm{EG} Score: < 7.0% = 0–2 pts | 7.0%–12.0% = 3–5 pts | > 12.0% = 6–10 pts
+ NVRA Purge Anomaly (\bm{P_{nvra}}): If purges occur within the 90-day quiet period, multiply the baseline anomaly score by 2.0x.
+========================================================================================
+3.4 MODULE 4: Public Sphere Suppression & Information Atomization (\bm{D_4})
+========================================================================================
+
+Section 1: Theoretical & Legal Foundations
+Public Sphere Suppression occurs when government actors use informal coercion ("jawboning"), regulatory retaliation, or selective state advertising distribution to restrict speech and financially weaken independent media.
+
+Core Legal Pillars:
+
+ First Amendment (U.S. Const. amend. I): Prohibits the government from abridging speech.
+ Government Speech vs. Coercion Doctrine: Using official regulatory or investigative power to coerce third-party platforms into suppressing speech is unconstitutional (e.g., NRA v. Vullo).
+
+Section 2: Independent Investigator Quick-Start
+Is your local or federal government using tax dollars to prop up friendly media while starving critics?
+
+1. Go to USAspending.gov and pull the target agency's advertising and public notice contracts.
+
+2. Run the D4 Python Script: ⁠python d4_audit_tool.py --ad_data [agency_ads.csv]⁠
+
+3. The tool compares the government's advertising spend against actual audience market share. If an outlet with a 5% audience share is receiving 80% of the government's ad budget, you have documented financial distortion (\bm{S_{ad}}).
+
+Section 3: Quantitative Metric Methodology & Scoring
+To calculate Federal Advertising Distortion (\bm{S_{ad}}):
+
+<img width="2722" height="206" alt="image" src="https://github.com/user-attachments/assets/4e60c46c-eb33-417a-9f12-929fbdf9c39a" />
+
+Scoring Matrix (Max 20 Points):
+ Jawboning Threat Index (\bm{C_{jb}}): < 5.0 = 0–2 pts | 5.0–15.0 = 3–5 pts | > 15.0 = 6–10 pts
+ \bm{S_{ad}} Score: < 10.0% = 0–2 pts | 10.0%–40.0% = 3–5 pts | > 40.0% = 6–10 pts
+========================================================================================
+3.5 MODULE 5: Judicial Independence & Rule-of-Law Decay (\bm{D_5})
+========================================================================================
+
+Section 1: Theoretical & Legal Foundations
+Judicial Decay occurs when Article III court authority is weakened through single-judge venue manipulation (forum shopping) or explicit executive defiance of federal court injunctions.
+
+Core Legal Pillars:
+ 
+ Article III Judicial Power: Vests federal judicial power in independent courts.
+
+ The Federal Judiciary Act (28 U.S.C. § 137): Regulates neutral case distribution.
+ 
+ The All Writs Act (28 U.S.C. § 1651): Authorizes federal courts to enforce judgments.
+
+Section 2: Independent Investigator Quick-Start
+Are state or federal agencies ignoring court orders, or is the executive branch shopping for specific judges to get the rulings they want?
+
+1. Log into PACER (Public Access to Court Electronic Records) or use the free RECAP archive.
+
+2. Run the D5 Python Script: ⁠python d5_audit_tool.py --pacer_data [dockets.csv]⁠
+
+3. The tool calculates the "Forum Shopping Capture Ratio" (\bm{F_{sc}}) to see if major cases are being funneled exclusively into single-judge divisions to bypass randomized, fair judicial assignment.
+
+Section 3: Quantitative Metric Methodology & Scoring
+To calculate the Injunction Compliance & Defiance Index (\bm{J_{ci}}):
+
+<img width="2496" height="212" alt="image" src="https://github.com/user-attachments/assets/8b3f8b7c-b679-4954-ba94-d596c27bf0ff" />
+
+Scoring Matrix (Max 20 Points):
+ Defiance Ratio (\bm{J_{ci}}): < 5.0% = 0–2 pts | 5.0%–20.0% = 3–5 pts | > 20.0% = 6–10 pts
+ Forum Shopping Ratio (\bm{F_{sc}}): < 15.0% = 0–2 pts | 15.0%–50.0% = 3–5 pts | > 50.0% = 6–10 pts
+
+ 
+
+
+
+
+
 
