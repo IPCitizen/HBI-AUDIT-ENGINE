@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""
+Dimension 5 (D5) Judicial Independence & Decay Audit Script (v1.0)
+---------------------------------------------------------------------------------
+Course: POLI 485 / LAW 720: Democratic Backsliding & Institutional Auditing
+Description: Audits PACER case dockets for preliminary injunction compliance (J_ci)
+             and measures Single-Judge Forum Shopping capture ratios (F_sc).
+"""
+
+import argparse
+import pandas as pd
+
+def calculate_judicial_metrics(df: pd.DataFrame) -> dict:
+    """Computes J_ci defiance percentages and F_sc forum shopping ratios."""
+    tot_cases = len(df)
+    injunctions = df[df['Injunction_Issued'] == True]
+    tot_inj = len(injunctions)
+    
+    defiance_events = len(injunctions[injunctions['Defiance_Event'] == True])
+    single_judge_cases = len(df[df['Single_Judge_Division'] == True])
+
+    j_ci = (defiance_events / tot_inj * 100.0) if tot_inj > 0 else 0.0
+    f_sc = (single_judge_cases / tot_cases * 100.0) if tot_cases > 0 else 0.0
+
+    return {
+        "Total_Cases": tot_cases,
+        "Total_Injunctions": tot_inj,
+        "Defiance_Events": defiance_events,
+        "Single_Judge_Cases": single_judge_cases,
+        "J_ci_Percent": j_ci,
+        "F_sc_Percent": f_sc
+    }
+
+def main():
+    parser = argparse.ArgumentParser(description="Audit D5 Judicial Independence")
+    parser.add_argument("--pacer_data", type=str, required=True, help="CSV containing: Case_ID, Single_Judge_Division, Injunction_Issued, Defiance_Event")
+    parser.add_argument("--output", type=str, default="d5_audit_results.csv", help="Output CSV file")
+    args = parser.parse_args()
+
+    print("=================================================================")
+    print(" D5 AUDIT ENGINE: JUDICIAL INDEPENDENCE & RULE-OF-LAW DECAY     ")
+    print("=================================================================")
+
+    df = pd.read_csv(args.pacer_data)
+    res = calculate_judicial_metrics(df)
+
+    print("\n=================== D5 AUDIT SUMMARY ===================")
+    print(f"Total Dockets Audited:         {res['Total_Cases']}")
+    print(f"Preliminary Injunctions:       {res['Total_Injunctions']}")
+    print(f"Injunction Defiance Ratio (J_ci): {res['J_ci_Percent']:.2f}%")
+    print(f"Forum Shopping Ratio (F_sc):      {res['F_sc_Percent']:.2f}%")
+    print("=========================================================\n")
+
+    df.to_csv(args.output, index=False)
+    print(f"Judicial audit results exported to: {args.output}")
+
+if __name__ == "__main__":
+    main()
