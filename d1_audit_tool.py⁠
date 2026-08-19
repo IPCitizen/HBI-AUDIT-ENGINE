@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""
+Dimension 1 (D1) Executive Aggrandizement & Salami-Slicing Audit Script (v3.0)
+---------------------------------------------------------------------------------
+Course: POLI 485 / LAW 720: Democratic Backsliding & Institutional Auditing
+Description: Queries the Federal Register API for Executive Orders, pulls Treasury
+             Account Symbol (TAS) balances from USAspending.gov, and runs an 
+             automated Cumulative Velocity (V_cs) clustering engine.
+"""
+
+import argparse
+import datetime
+import json
+import sys
+import pandas as pd
+import requests
+
+FEDERAL_REGISTER_API = "https://www.federalregister.gov/api/v1"
+USASPENDING_API = "https://api.usaspending.gov/api/v2"
+
+HEADERS = {
+    "User-Agent": "Citizens-Liberty-Alliance-Audit-Engine/3.0 (Educational/Research)",
+    "Content-Type": "application/json"
+}
+
+def fetch_federal_register_actions(days_back: int) -> list:
+    """Queries Federal Register API for executive orders and proclamations."""
+    start_date = (datetime.date.today() - datetime.timedelta(days=days_back)).strftime("%Y-%m-%d")
+    print(f"[1/4] Querying Federal Register Presidential Documents since {start_date}...")
+    
+    url = f"{FEDERAL_REGISTER_API}/documents.json"
+    params = {
+        "conditions[type][]": ["PRESDOCU"],
+        "conditions[presidential_document_type][]": ["executive_order", "proclamation"],
+        "conditions[publication_date][gte]": start_date,
+        "fields[]": ["document_number", "title", "type", "publication_date", 
+                     "executive_order_number", "html_url", "abstract"],
+        "per_page": 100,
+        "order": "newest"
+    }
+
+    results = []
+    page = 1
+    while True:
+        params["page"] = page
+        response = requests.get(url, params=params, headers=HEADERS)
+        if response.status_code != 200:
+            break
+        data = response.json()
+        page_results = data.get("results", [])
+        if not page_results:
+            break
+        results.extend(page_results)
+        if page >= data.get("total_pages", 1):
+            break
+        page += 1
+
+    print(f"      Retrieved {len(results)} presidential documents.")
+    return results
+
+def query_tas_balances(aid: str, main_account: str = None, fiscal_year: int = None) -> dict:
+    """Queries USAspending.gov for budgetary resources in target Treasury Account Symbols."""
+    if not fiscal_year:
+        fiscal_year = datetime.date.today().year
+
+    print(f"[2/4] Querying USAspending TAS Balances (AID: {aid}, FY: {fiscal_year})...")
+    url = f"{USASPENDING_API}/tas/balances/"
+    payload = {
+        "filters": {
+            "agency_identifier": str(aid).zfill(3),
+            "fy": fiscal_year
+        },
+        "pagination": {"page": 1, "limit": 100}
+    }
+    if main_account:
+        payload["filters"]["main_account_code"] = str(main_account).zfill(4)
+
+    try:
+        response = requests.post(url, json=payload, headers=HEADERS, timeout=12)
+        if response.status_code == 200:
+            data = response.json()
+            results = data.get("results", [])
+            total_budget = sum(item.get("budgetary_resources_amount", 0.0) or 0.0 for item in results)
+            return {
+                "Records_Found": len(results),
+                "Total_Budgetary_Resources": total_budget,
+                "Raw_Data": results
+            }
+    except Exception as e:
+        print(f"      [Warning] USAspending API connection error: {e}")
+
+    return {"Records_Found": 0, "Total_Budgetary_Resources": 0.0, "Raw_Data": []}
+
+def analyze_salami_slicing_velocity(documents: list) -> dict:
+    """Detects sub-threshold emergency actions, computes V_cs, and determines point penalties."""
+    print("[3/4] Running Automated Cumulative Velocity (V_cs) Salami-Slicing Engine...")
+    sub_threshold_events = []
+    
+    for doc in documents:
+        title = doc.get("title", "").lower()
+        abstract = (doc.get("abstract", "") or "").lower()
+        text = f"{title} {abstract}"
+        
+        is_emergency = any(k in text for k in ["national emergency", "50 u.s.c.", "reallocate", "transfer", "emergency power"])
+        if is_emergency:
+            sub_threshold_events.append(doc)
+
+    n_events = len(sub_threshold_events)
+    estimated_avg_transfer = 5000000.0  # $5M estimated per sub-threshold action
+    total_v_cs = n_events * estimated_avg_transfer
+
+    if total_v_cs < 10000000.0 or n_events < 3:
+        classification = "Isolated Administrative Noise"
+        penalty = 0
+    elif 10000000.0 <= total_v_cs <= 50000000.0 or (3 <= n_events <= 7):
+        classification = "Systematic Salami-Slicing Pattern"
+        penalty = 3
+    else:
+        classification = "High-Frequency Fund Evasion / Laundering"
+        penalty = 5
+
+    return {
+        "Event_Count": n_events,
+        "Total_V_cs": total_v_cs,
+        "Classification": classification,
+        "Penalty_Points": penalty,
+        "Events": sub_threshold_events
+    }
+
+def main():
+    parser = argparse.ArgumentParser(description="Audit D1 Executive Power & Salami-Slicing")
+    parser.add_argument("--days", type=int, default=365, help="Days to audit")
+    parser.add_argument("--aid", type=str, default="097", help="Agency Identifier (e.g. 097=DoD)")
+    parser.add_argument("--main", type=str, default=None, help="Main Account Code (e.g. 0100)")
+    parser.add_argument("--fy", type=int, default=datetime.date.today().year, help="Fiscal Year")
+    parser.add_argument("--output", type=str, default="d1_audit_results.csv", help="Output CSV file")
+    args = parser.parse_args()
+
+    print("=================================================================")
+    print(" D1 AUDIT ENGINE: EXECUTIVE AGGRANDIZEMENT & SALAMI-SLICING     ")
+    print("=================================================================")
+    
+    docs = fetch_federal_register_actions(args.days)
+    tas_data = query_tas_balances(aid=args.aid, main_account=args.main, fiscal_year=args.fy)
+    v_cs_data = analyze_salami_slicing_velocity(docs)
+
+    # Process and Export
+    records = []
+    for doc in docs:
+        title = doc.get("title", "")
+        abstract = doc.get("abstract", "") or ""
+        is_em = any(k in f"{title} {abstract}".lower() for k in ["emergency", "50 u.s.c.", "reallocate"])
+        records.append({
+            "Doc_Number": doc.get("document_number"),
+            "Date": doc.get("publication_date"),
+            "Title": title,
+            "Emergency_Flag": is_em,
+            "Yield_Status": "HIGH" if is_em else "LOW",
+            "Citation": f"Fed. Reg. Doc. {doc.get('document_number')}"
+        })
+
+    df = pd.DataFrame(records)
+    df.to_csv(args.output, index=False)
+    print(f"[4/4] Results exported successfully to {args.output}")
+
+    print("\n=================== D1 AUDIT SUMMARY ===================")
+    print(f"Total Presidential Documents Audited: {len(df)}")
+    print(f"Target Agency TAS Budget Resources:   ${tas_data['Total_Budgetary_Resources']:,.2f}")
+    print(f"Sub-Threshold Transfers Detected (N): {v_cs_data['Event_Count']}")
+    print(f"Estimated Cumulative Volume (V_cs):   ${v_cs_data['Total_V_cs']:,.2f}")
+    print(f"V_cs Institutional Classification:    {v_cs_data['Classification']}")
+    print(f"D1 Penalty Points Assigned via V_cs:  +{v_cs_data['Penalty_Points']} POINTS")
+    print("=========================================================\n")
+
+if __name__ == "__main__":
+    main()
