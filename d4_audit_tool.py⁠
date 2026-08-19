@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+"""
+Dimension 4 (D4) Public Sphere Suppression Audit Script (v1.0)
+---------------------------------------------------------------------------------
+Course: POLI 485 / LAW 720: Democratic Backsliding & Institutional Auditing
+Description: Computes the Executive Coercion Index (C_jb) and parses advertising 
+             procurement data for market-share distortion (S_ad).
+"""
+
+import argparse
+import json
+import pandas as pd
+
+def compute_c_jb(events: list) -> float:
+    """Calculates weighted coercion score based on threat severity and scope."""
+    score = 0.0
+    for e in events:
+        level = e.get("threat_level", "low")
+        scope = e.get("target_scope", "local")
+        w = 5.0 if level == "high" else (3.0 if level == "medium" else 1.0)
+        t = 2.0 if scope == "national" else 1.0
+        score += (w * t)
+    return score
+
+def main():
+    parser = argparse.ArgumentParser(description="Audit D4 Public Sphere Suppression")
+    parser.add_argument("--coercion_events", type=str, required=True, help="JSON file containing documented coercion events")
+    parser.add_argument("--ad_data", type=str, required=True, help="CSV containing: Outlet, Ad_Spend_Pct, Audience_Share_Pct")
+    parser.add_argument("--output", type=str, default="d4_audit_results.csv", help="Output CSV file")
+    args = parser.parse_args()
+
+    print("=================================================================")
+    print(" D4 AUDIT ENGINE: PUBLIC SPHERE SUPPRESSION & ATOMIZATION       ")
+    print("=================================================================")
+
+    with open(args.coercion_events, 'r') as f:
+        events = json.load(f)
+
+    ad_df = pd.read_csv(args.ad_data)
+    
+    c_jb_score = compute_c_jb(events)
+    
+    # Calculate average ad distortion
+    distortions = []
+    for _, row in ad_df.iterrows():
+        spend = float(row['Ad_Spend_Pct'])
+        share = float(row['Audience_Share_Pct'])
+        dist = abs((spend - share) / share * 100.0) if share > 0 else 0.0
+        distortions.append(dist)
+    avg_s_ad = sum(distortions) / len(distortions) if distortions else 0.0
+
+    print("\n=================== D4 AUDIT SUMMARY ===================")
+    print(f"Coercion Events Processed:     {len(events)}")
+    print(f"Executive Coercion Score (C_jb): {c_jb_score:.2f}")
+    print(f"Average Ad Distortion (S_ad):    {avg_s_ad:.2f}%")
+    print("=========================================================\n")
+
+if __name__ == "__main__":
+    main()
